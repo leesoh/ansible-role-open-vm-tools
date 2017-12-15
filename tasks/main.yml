@@ -1,0 +1,12 @@
+---
+- name: Install open-vm-tools
+  become: true
+  when: ansible_os_family == "Debian"
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - open-vm-tools
+    - open-vm-tools-desktop
+
+- name: Mount hgfs shared folders
+  become: true
+  command: mount -t fuse.vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other
