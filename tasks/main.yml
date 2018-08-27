@@ -8,6 +8,7 @@
     - open-vm-tools-desktop
 
 - name: Mount hgfs shared folders
+  when: mount_hgfs
   become: true
   mount:
     fstype: fuse.vmhgfs-fuse
@@ -16,13 +17,15 @@
     state: mounted
     opts: allow_other
 
-  #- name: Mount hgfs shared folders
-  #  become: true
-  #  command: mount -t fuse.vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other
-  #
-  #- name: Add mount to fstab
-  #  become: true
-  #  lineinfile:
-  #    path: /etc/fstab
-  #    regexp: 'vmhgfs-fuse'
-  #    line: '.host:/ /mnt/hgfs fuse.vmhgfs-fuse allow_other 0 0'
+- name: Mount hgfs shared folders
+  when: mount_hgfs
+  become: true
+  command: mount -t fuse.vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other
+
+- name: Add mount to fstab
+  when: mount_hgfs
+  become: true
+  lineinfile:
+    path: /etc/fstab
+    regexp: 'vmhgfs-fuse'
+    line: '.host:/ /mnt/hgfs fuse.vmhgfs-fuse allow_other 0 0'
